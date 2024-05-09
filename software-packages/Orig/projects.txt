@@ -1,0 +1,242 @@
+Project Assignments
+
+If you are taking a course that requires you to submit your 
+interpreter/compiler projects for grading, the instructions below 
+specify precisely what you should submit to your instructor. Your 
+instructor, however, may have different instructions, in which 
+case you should follow those. 
+
+Recommended orders:
+
+   i1, h1, c1, i2, h2, c2, i3, h3, c3
+
+       or
+
+   i1, i2, i3, h1, h2, h3, c1, c2, c3
+
+Before you start coding any of these projects, be sure to 
+thoroughly study the provided code for that project (t1.py, 
+t2.py, p1shell.py, i1shell.py, h1shell.py, c1shell.py, 
+p2shell.py, h3shell.py) on which you build your interpreters and 
+compilers. If you do, you will learn more about interpreters, 
+compilers, and Python programming. Moreover, you will complete 
+the projects more quickly. 
+
+======================================================
+i1.py pure interpreter
+---------------------- 
+
+     Read chapters 1-8. 
+     
+     Copy i1shell.py to i1.py.
+     
+     Replace 'YOUR NAME HERE' in i1.py with your name.
+     
+     Finish the implementation of the i1.py pure interpreter 
+     (problem 1 in chapter 8). 
+     
+     When your interpreter is working correctly, set trace to 
+     False (if not already False) and grade to True. Then enter 
+
+        python i1.py i1.in > i1.txt
+
+     Submit i1.txt to your instructor.
+ 
+======================================================
+h1.py hybrid interpreter
+------------------------ 
+
+     Read chapters 9 and 10. 
+     
+     Copy h1shell.py to h1.py. 
+     
+     Replace 'YOUR NAME HERE' in h1.py with your name.
+     
+     Finish the implementation of the h1.py hybrid interpreter 
+     (problem 1 in chapter 10). 
+     
+     When your interpreter is working correctly, set trace to 
+     False (if not already False), and grade to True. Then enter 
+
+        python h1.py h1.in > h1.txt
+
+     Submit h1.txt to your instructor.
+
+======================================================
+c1.py compiler
+--------------
+
+     Read chapters 11, 12, and 13.
+
+     Copy c1shell.py to c1.py.
+
+     Replace 'YOUR NAME HERE' in c1.py with your name.
+     
+     Finish the implementation of the c1.py compiler (problem 1 
+     in chapter 13). 
+
+     To test c1.py, enter
+
+        python c1.py c1.in c1.s        (creates c1.s)
+        rpi c1.s                       (or ./rpi c1.s)
+
+     When you compilerr is working correctly, enter
+     
+        rpi c1.s > c1.out     (or ./rpi c1.s > c1.out)
+
+     On Windows, enter
+        copy c1.out + c1.s + c1.py c1.txt
+     On a non-Windows system, enter
+        cat c1.out c1.s c1.py > c1.txt
+       
+     Submit c1.txt to your instructor.   
+
+======================================================
+i2.py pure interpreter
+---------------------- 
+
+     Read chapters 14, 15, and 16. 
+
+     Finish the implementation of p2.py (problem 1 in chapter 15).
+
+     Copy p2.py to i2.py.
+
+     Set the grade global variable to False (if not already
+     False).
+
+     Replace 'YOUR NAME HERE' in i2.py with your name.
+     
+     Finish the implementation of the i2.py pure interpreter 
+     (problem 1 in chapter 16). 
+     
+     When your interpreter is working correctly, set trace to 
+     False (if not already False) and grade to True. Then enter 
+
+        python i2.py i2.in > i2.txt
+
+     Submit i2.txt to your instructor.
+
+======================================================
+h2.py hybrid interpreter
+------------------------ 
+
+     Read chapters 14, 15, and 17. 
+
+     Finish the implementation of the p2.py parser (problem 1, 
+     chapter 15). 
+
+     Copy p2.py to h2.py. 
+
+     Set the grade global variable to False (if not already
+     False).
+     
+     Replace 'YOUR NAME HERE' with your name in h2.py.
+
+     Finish the implementation of the h2 hybrid interpreter 
+     (problem 1 in chapter 17).
+     
+     When your interpreter is working correctly, set trace to 
+     False (if not already False) and grade to True. Then enter 
+
+        python h2.py h2.in > h2.txt
+
+     Submit h2.txt to your instructor.
+
+======================================================
+c2.py compiler
+--------------  
+
+     Read chapter 18. 
+
+     Copy your c1.py to c2.py. 
+     
+     Finish the implementation of the c2.py compiler, including 
+     all the optimizations discussed in chapter 18 (problem 1 in 
+     chapter 18). The assembly code generated should include the 
+     source code in c2.in as comments (see Fig. 18.7). Hint: 
+     Implement c2.py incrementally--that is, one optimization at 
+     a time. Debug each optimization before starting the next 
+     one. 
+     
+     To test c2.py, enter
+
+        python c2.py c2.in c2.s
+        rpi c2.s                       (or ./rpi c2.s)
+
+     Compare your c2.s file with Fig.18.7.
+
+     When your compiler is working correctly, enter
+     
+        rpi c2.s > c2.out     (or ./rpi c2.s > c2.out)
+
+     On Windows, enter
+        copy c2.out + c2.s + c2.py c2.txt
+     On a non-Windows system, enter
+        cat c2.out c2.s c2.py > c2.txt
+       
+     Submit c2.txt to your instructor.   
+
+======================================================
+i3.py pure interpreter
+----------------------
+ 
+     Read chapter 19. 
+
+     Copy your i2.py to i3.py.
+
+     Set the grade global variable to False (if not already
+     False).
+
+     Finish the implementation of the i3.py pure interpreter 
+     (problem 1 in chapter 19). 
+     
+     When your interpreter is working correctly, set trace to 
+     False (if not already False) and grade to True. Then enter 
+
+        python i3.py i3.in > i3.txt
+
+     Submit i3.txt to your instructor.
+
+======================================================
+h3.py hybrid interpreter
+------------------------
+
+     Copy h1.py from problem 1 in chapter 10 to h3.py. 
+
+     Set the grade global variable to False (if not already
+     False).
+
+     Finish the implementation of the h3.py hybrid interpreter. 
+
+     When your interpreter is working correctly, set trace to 
+     False (if not already False) and grade to True. Then enter 
+
+        python h3.py h3.in > h3.txt
+
+     Submit h3.txt to your instructor.
+
+======================================================
+c3.py compiler
+--------------
+
+     Read chapter 21.
+
+     Copy copy your c1.py to c3.py.
+     
+     Finish the implementation of the c3.py compiler. 
+     
+     To test c3.py, enter
+
+        python c3.py c3.in c3.s
+        rpi c3.s                       (or ./rpi c3.s)
+
+     When your compiler is working correctly, enter
+     
+        rpi c3.s > c3.out     (or ./rpi c3.s > c3.out)
+
+     On Windows, enter
+        copy c3.out + c3.s + c3.py c3.txt
+     On a non-Windows system, enter
+        cat c3.out c3.s c3.py > c3.txt
+       
+     Submit c3.txt to your instructor.

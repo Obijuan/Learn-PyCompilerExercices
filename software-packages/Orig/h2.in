@@ -1,0 +1,32 @@
+print(-59 + 20*3)
+a = 2
+bb_1 = -(a) + 12
+print(a*bb_1 + a*3*(-1 + -1 + -1))
+
+# start of code that tests level 2 features
+print()               # print with no args
+if a <= 2:            # if, no else
+   if a == 2:         # equal operator
+      if a > 1:       # greater than operator
+         pass         # does nothing
+         print(3)
+if a != 2:            # if-else
+   print('err#or')    # this print should be skipped
+else:                 # else
+   print(4,)          # this print should be executed
+while a >= 3:         # greater or equal operator
+   print('error')     # this print should be skipped
+a = ----+--+--5       # multiple unary operators
+while a < 10:         # while, less than operator
+   print(a)
+   a = +a + .5 + 0.5  # floating point
+if True:              # True is a boolean constant
+   pass               # pass does nothing
+print('10\n11')       # escape sequence
+print('1' + '2')      # string concatenation
+print(-a + 23)        # unary minus operation
+if a <= 10:           # less than or equal operator
+   print('#14\'\\')   # pound, quote, backslash in string
+print(15, 16)         # one space between numbers
+if (None != False):   # None, False, not equal operator
+   print(51/(5 - 2))  # subtraction

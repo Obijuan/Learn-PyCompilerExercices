@@ -1,0 +1,883 @@
+                           rpi Program Version 3.8
+                     Copyright (c) 2018 Anthony J. Dos Reis
+
+DISCLAIMER                                                    
+----------
+
+The files in this software package are provided to you on an "as 
+is" basis for instructional purposes only, without any 
+warranties, expressed or implied. The author, the copyright 
+holder, and distributer of these files all shall not be liable in 
+any event for incidental, consequential, special, or punitive 
+damages in connection with, or arising out of the distribution, 
+performance, or use of these files, or for any claim, damages or 
+other liability, whether in an action of contract, tort or 
+otherwise, arising from, out of or in connection with the 
+software.              
+
+
+INTRODUCTION
+------------
+
+The Raspberry Pi Assembly Language Interpreter (rpi) is software 
+developed for the book "WRITING INTERPRETERS AND COMPILERS FOR 
+THE RASPBERRY PI USING PYTHON SECOND EDITION" by Anthony J. Dos 
+Reis. Because rpi directly interprets assembly language code, it 
+makes it easy to test, debug, and experiment with ARM assembly 
+language programs. 
+
+Versions of rpi are available for Windows, Mac OS X, Linux, and 
+Raspbian. The rpi program can handle the two formats that are 
+commonly used for ARM assembly language programs. 
+ 
+The rpi program has been tested with all the programs in 
+
+     "WRITING INTERPRETERS AND COMPILERS FOR THE RASPBERRY PI 
+      USING PYTHON SECOND EDITION" by Anthony J. Dos Reis 
+
+     "RASPBERRY PI ASSEMBLY LANGUAGE (RASPBIAN BEGINNERS)", third 
+      edition, by Bruce Smith (except for the floating point and
+      thumb programs) 
+
+But because of the large number of variations assembly language 
+instructions can have, not every variation has been tested. If 
+you find any bugs in rpi, please send an email to 
+
+     dosreist@newpaltz.edu 
+
+with a description of the bug or, even better, a copy of the code 
+segment that is causing the problem. Also you are welcome to send 
+me your requests for additional features you would like rpi to 
+have. 
+
+
+PROJECT ASSIGNMENTS 
+-------------------
+
+See projects.txt
+
+
+EXTRA SET OF TEST FILES
+-----------------------
+
+The ".in" files with "x" in their base names (i1x.in, h1x.in, 
+c1x.in, i2x.in, h2x.in, c2x,in, i3x.in, h3x.in, and c3x.in) are a 
+second set of test files. 
+
+ 
+INSTALLATION
+------------
+
+rpi is a command line program. That is, it is invoked by entering 
+the rpi command on the command line--not by clicking on an icon. 
+To use the command line, start the Terminal program (on OS X, 
+Linux, or Raspbian) or the Command Prompt program (on Windows). 
+You will then see on your display the command line prompt, 
+indicating that the operating system is waiting for you to enter 
+a command. 
+
+After starting the command line program, create a directory for 
+the rpi software package in your Desktop directory. Let's call 
+it "wic", but you can use any directory name you want 
+(in which case you should substitute the name of your directory 
+for "wic" in the directions that follow). 
+
+To create the wic directory, start the Terminal program (on OS 
+X, Linux, or Raspbian) or the Command Prompt program (on 
+Windows). Then enter on the command line
+
+     cd Desktop            (move down to the Desktop directory)
+     mkdir wic             (create wic directory)
+
+Next, position your computer on the wic directory by entering
+
+     cd wic
+
+Copy the entire contents of the unzipped rpi.zip file to your wic 
+directory. Your wic directory will then have the four versions of 
+rpi: 
+
+     rpi.exe     (Windows version) 
+     rpi         (Mac OS X version) 
+     rpilnx      (Linux version) 
+     rpiraspbian (Raspbian version) 
+
+If you are using Linux, make a copy of rpilnx named "rpi" by 
+entering (when positioned on your wic directory) 
+
+     cp rpilnx rpi
+
+If you are using Raspbian, make a copy of rpiraspbian named "rpi" 
+by entering (when positioned on your wic directory)
+
+     cp rpiraspbian rpi 
+
+This copy will overlay the Mac OS X version of rpi in your wic 
+directory (but you will still have a copy of the Mac OS X version 
+in the osx folder if you need it in the future). 
+
+
+CHANGING PERMISSIONS
+--------------------
+
+If your system is OS X, Linux, or Raspbian, you may have to 
+change the permission on the rpi file so that it can be executed 
+(on my OS X, Linux, and Raspbian systems, a change of permission 
+was necessary only on my Raspbian system).
+ 
+To see if rpi has the necessary permission, when positioned on 
+your wic directory, enter on the command line 
+
+     ls -al rpi
+
+You will then see on the screen a line that starts with something 
+like this: 
+
+-rwxr-xr-x
+
+In the fourth column (right after "-rw") , there should be an "x", 
+as in the line above (the "x" indicates that the program can be 
+executed). If instead a hyphen is in the fourth column, then you 
+have to change the permission for the rpi file. To do this, enter 
+(when positioned on the wic directory)
+
+     chmod 755 rpi
+
+
+QUICK START
+-----------
+
+To run rpi, start the command line program (the Terminal program 
+on OS X, Linux, and Raspbian, or the command prompt program on 
+Windows). Position your computer on your wic directory (i.e., the 
+directory that has the rpi program). 
+
+Then on Windows, enter 
+
+     rpi <filename of assembly language program>
+
+On OS X, Linux, or Raspbian, enter
+
+     ./rpi <filename of assembly language program>
+
+
+For example, to run the assembly language program in test.s on 
+Windows, enter 
+
+     rpi test.s
+
+To activate the debugger, specify the -d command line argument 
+when invoking rpi:
+
+     rpi test.s -d
+
+The debugger will then display a prompt. The prompt consists of 
+the mnemonic of the instruction to be executed next followed by 
+three greater than signs. For example, the prompt 
+
+ldr>>>
+
+indicates the next instruction to be executed is an ldr 
+instruction. To see the entire instruction, enter i at the 
+prompt: 
+
+ldr>>>i
+
+If you specify the -d command line argument when you invoke rpi, 
+the "step count" initially is 1 and the trace function in on. The 
+step count is the number of assembly language instructions rpi 
+will execute each time you hit the Enter key. Thus, each time you 
+hit the enter key, you will execute and trace one instruction. To 
+change the step count, enter an integer at the debugger's prompt. 
+The step count will be set to the integer entered. For example, 
+if you enter 5, then each time you hit the Enter key, rpi will 
+execute and trace five instructions and then pause. 
+
+Some common debugger commands (for a complete list, see below):
+
+     r                  displays all registers
+
+     m <label> <n>      display n locations starting at label
+
+     g                  set step count to infinity, run but stop 
+                        at breakpoints and p pseudo instructions, 
+                        if any
+
+     x                  display numbers in hex
+
+     b <label>          set breakpoint at location corresponding 
+                        to <label>
+
+     h                  help screen
+
+     q                  quit
+
+
+
+NUMBERS
+-------
+
+     decimal starts with a nonzero digit (for example, 20, -7)
+     hex     starts with 0x, 0X, or & (for example 0x1f, -&a)
+     octal   starts with zero (for example, 010, -01010)
+
+To represent a number in base n, where n is 2 to 9, use
+
+     n_<digits less than n>
+
+For example, the base four number 13 (equal to 7 decimal) is 
+represented as 
+
+     4_13
+
+A constant in assembly language does not have to be preceded with 
+"#". For example, the following two instructions are both legal 
+and equivalent: 
+
+     mov r1, #1
+     mov r1, 1   @ warning: assemblers may not allow this form
+
+However, most assemblers require the "#" (but not rpi).
+
+
+COMMENTS
+--------
+
+One-line comments start on a line with "@" or ";" and end at the 
+end of the same line. A comment that starts with "/*" ends with 
+the first occurrence of "*/". The latter type of comment can span 
+multiple lines. 
+
+
+CASE SENSITIVITY
+----------------
+
+rpi is case insensitive except for the labels in an assembly 
+language program (including C library function names). Thus, the 
+mnemonics, directives, register names, and hex numbers can be in 
+either case. 
+
+
+COMMAND LINE SWITCHES
+---------------------
+
+Any of the following command line switches can be specified in 
+any order on the command line when rpi is invoked:     
+
+     -a  alternate format (see alternate assembly language format 
+         section below)
+     -d  debugger on, step count = 1, trace on 
+     -m  memory display when program ends
+     -r  register display when program ends
+     -s  stack display when program ends
+     -t  instruction trace on
+     -x  memory, registers, and addresses displayed in hex
+     -z  run to end, ignore breakpoints and pseudo instructions
+     -h  help screen
+     -?  information on the program
+
+The first phase of the rpi program builds the assembly language 
+program in memory. If rpi detects an error in the assembly 
+language program before it completes its first phase, it 
+terminates immediately after displaying an error message. Thus, 
+rpi does not produce any displays if rpi detects an error before 
+it completes phase 1, even if the -m, -r, or -s command line 
+switches are specified. 
+
+
+PAUSES
+------
+
+rpi pauses when
+
+     rpi first starts if the -d command line argument is specified
+     when rpi is invoked, or 
+
+     an instruction on which a breakpoint is set is about to be 
+     executed, or  
+
+     step count number of instructions have been executed. For 
+     example, if the step count is 5, then rpi executes five
+     instructions and then pauses each time the Enter key is 
+     hit, or
+
+     a p pseudo instruction is executed.
+
+     
+DEBUGGER COMMANDS
+-----------------
+
+When rpi is paused, any of the following debugger commands can be 
+entered in response to the debugger's prompt:
+
+     Hit Enter key 
+
+          Run, pausing each time step count number of instructions 
+          is executed, and at breakpoints and p instructions. 
+    
+     postive integer
+
+         Sets step count to the positive integer entered, and then 
+         executes that number of instructions. Each time Enter is 
+         subsequently hit, rpi executes the new step count number 
+         of instructions, and then pauses. For example, if 5 is 
+         entered, then each time Enter is hit, rpi executes 5 
+         instructions and pauses. 
+      
+     b <label>  sets breakpoint at the specified label, replacing
+                the current breakpoint, if any.
+
+     b <address>  sets breakpoint at the specified address, 
+                  replacing the current breakpoint, if any. If 
+                  the address entered is not an instruction 
+                  boundary (i.e., word boundary), it is decreased 
+                  to the next lower instruction boundary. For 
+                  example, "b 7" sets a breakpoint at address 4. 
+
+     b   reactivate the previous breakpoint.
+
+     b-  cancel the current breakpoint.
+
+     g   set step count to infinity and run, pausing only at 
+         breakpoints and p pseudo instructions, if any. 
+
+     h   help screen
+
+     i   display entire instruction to be executed next.
+
+     m   memory display. The m command can include arguments (see 
+         below for a description of the arguments that can be 
+         used). 
+
+     q   quit program.
+
+     r   register display. The r command can include arguments 
+         (see below for a description of the arguments that can 
+         be used).         
+
+     s   stack display.
+
+     t   turn instruction trace on (trace is off on startup unless -t 
+         or -d is specified on the command line).
+
+     t-  turn instruction trace off.
+
+     w   write a value to a register or a memory location. The w 
+         command can include arguments (see below for a 
+         description of the arguments that can be used). 
+
+     x   turn hex display on (display numbers in hex). Hex 
+         display is off on startup unless -x is specified on the 
+         command line). 
+
+     x-  turn hex display off (i.e., display numbers in decimal,
+         except for ASCII codes in strings). 
+
+     z   run to end, ignore breakpoints and pseudo instructions. 
+         The z command does not affect the trace status. If trace 
+         is on, instructions are traced when z is entered. If you 
+         do not wish a trace, then enter t- befoe entering z. 
+
+The m command without arguments displays all of memory in use by 
+the assembly language program, except for the stack.
+
+The m command can take a label or an address. For example, the 
+following command displays the contents of the word at the 
+label x:
+
+     m x
+
+The following command displays the contents of location 100 
+decimal:
+
+     m 100
+
+The following command displays the contents of location 100 
+hex:
+
+     m 0x100
+
+If a second argument is included on an m command, it specifies 
+the number of words to be displayed.  For example, the following 
+command displays five words starting from the label x:                                                
+
+     m x 5
+
+To display all the words from x to the end of the program, use a 
+large number for the second argument in the m command. 
+
+If "*' is the last argument in an m command, then the command 
+proceeds normally except it displays only data, not instructions. 
+For example, the following command displays the data, if any, in 
+the 10 lines starting from location 300. 
+
+     m 300 10 *
+
+The r command without arguments displays all the registers and 
+the n, z, c, v flags.
+
+The r command can take a register name or number as an argument. 
+For example, 
+
+     r r15     (or   r 15   or   r15   or   r pc)
+
+displays r15. 
+
+The w command writes a value to a register or a memory location. 
+The w command requires a register name and a value, or a memory 
+address or label and a value:
+
+     w <regname> <value>
+or
+     w <addr> <value>
+or
+     w <label> <value>
+
+For example, to write 123 to r1, enter at the command prompt
+
+     w r1 123
+
+To write 123 to location 1000, enter
+
+     w 1000 123
+
+To write 123 to the location corresponding to the label x, enter
+
+     w x 123
+
+Only the n, z, c, and v bits in the cpsr can be modified with the 
+w command. For example, after entering
+
+     w cpsr 0xffffffff
+
+the cpsr will contain 0xf0000010. The left hex digit (the n, z, 
+c, and v bits) is set to 0xf, but the rightmost 7 hex digits are 
+unaffected (they are always equal to 0000010, indicating user 
+mode). 
+
+The b, m, r, and w debugger commands do not require a space 
+preceding the first argument.  For example, the following 
+commands are legal: 
+
+     m300  (or m 300)
+     mx    (or m x where x is a label in the program)
+     r3    (or r 3)
+     rr3   (or r r3)
+     rpc   (or r pc)
+     b300  (or b 300)
+     bloop (or b loop where loop is a label in the program)
+     wr1 5 (or w r1 5)
+
+
+A label in the b, m, or w commands can be suffixed with + or - 
+followed by an integer offset.  For example,
+
+     w loop+4 5
+
+writes 5 in the location corresponding to loop+4. When specifying 
+a label followed by an offset, do not embed whitespace. For 
+example, if you enter 
+
+    w loop +4 5
+
+rpi treats the +4 as the value to write--not the offset.
+
+A stack is either the "full" type or the "empty" type. In a full 
+stack, sp points to the last occupied slot. In an empty stack, sp 
+points to the next slot to be filled on a push. The s command and 
+the s pseudo instruction display the stack from the location to 
+which sp points to the bottom of the stack. If the stack is the 
+full type, the bottom item is not part of the stack. If the stack 
+is the empty type, the bottom item is part of the stack but the 
+item to which sp points is not. 
+
+
+REQUESTING DISPLAYS
+-------------------
+
+A display of memory, registers, or the stack can be triggered by 
+command line switches (-m, -r, -s), debugger commands (m, r, s), 
+or pseudo instructions (m, r, s). 
+
+For example, suppose you want to execute the assembly language 
+program in the file test.s and get memory and register display 
+when the program ends. To do this on Windows, enter 
+
+     rpi test.s -m -r
+
+On a Raspbian, Linux, or OS X sytem, enter
+
+    ./rpi test.s -m -r
+
+Suppose test.s is the following program and is invoked as 
+indicated above: 
+
+          .data
+          .global _start
+_start:
+          mov r0, #2            
+          str r0, x             @ overlay 1 in x with 2
+          mov r7, #1
+          svc 0
+
+x:        .word 1
+
+Then rpi produces the following displays when the assembly 
+language program ends: 
+
+
+
+                                     Tue Jun 12 21:40:05 2018
+
+---------------------------------------------- Memory display
+0    d _start:   mov     r0      #2                         0
+4    d           str     r0      x                          0
+8    d           mov     r7      #1                         0
+12   d           svc     0                                  0
+16   d x:        .word   1                                  2
+
+-------------------------------------------- Register display
+n   = 0           z   = 0           c   = 0           v   = 0
+r0  = 2           r1  = 0           r2  = 0           r3  = 0           
+r4  = 0           r5  = 0           r6  = 0           r7  = 1           
+r8  = 0           r9  = 0           r10 = 0           r11 = 0           
+r12 = 0           r13 = 42000       r14 = 0           r15 = 16          
+
+
+Each line in a memory display starts with the address of that 
+line, followed by a character that indicates the type of memory 
+for that line ('d' for .data or .bss, 't' for .text). The 
+rightmost entry on each line of the memory display shows the 
+current contents of that line. Because the assembly language 
+program is not assembled but directly interpreted by rpi, a zero 
+value is displayed for all assembly language instructions. In the 
+memory display, commas within the assembly language instructions 
+are not shown, except when they occur within braces. The values 
+in memory and register displays are in decimal unless the -x 
+command line argument is specified or the x debugger command or 
+pseudo instruction is executed, in which case values are 
+displayed in hex. 
+
+The values in the right column of a memory display are the values 
+at the time the display occurs. Thus, if the display occurs at 
+the end of the program (which is the effect of the -m command 
+line argument), the values shown are the final values. 
+
+In the following program, the s pseudo instruction displays the 
+stack at that point in the execution of the program: 
+
+          .data
+          .global _start
+_start:
+          mov r0, #1            
+          push {r0}
+          mov r0, #2
+          push {r0}
+          s          @ pseudo instruction displays the stack
+          mov r7, #1
+          svc 0
+
+When rpi executes this program, the s pseudo instruction 
+displays the stack:
+
+
+----------------------------------------------- Stack display
+42000: 0           stack bottom
+41996: 1         
+41992: 2           <--- sp
+
+
+TWO FORMS OF ASSEMBLY LANGUAGE PROGRAMS
+---------------------------------------
+
+rpi expects in the assembly language program to be in one of two 
+forms:
+
+1) Have a global label _start, in which case the program should 
+   terminate by executing  
+
+           svc 0
+
+   with r7 = 1.  For example:
+
+
+         .global _start
+_start:
+         ...
+
+         mov r7, #1
+         svc 0
+
+   
+   A program in this form is NOT called by start-up code. Because 
+   a program must be called by start-up if the program calls any 
+   C library function, a program in this form cannot call any C 
+   library functions.  
+
+
+2) In this form, the main function in the program is called by 
+   start-up code. When the program completes, it returns to 
+   start-up code. 
+
+         .global main
+main:    push {lr}     @ save the return address
+
+         ...           
+   
+         pop {pc}      @ return to start-up code
+                   
+
+   If the program does not change the contents of lr (register 
+   14), a slighty simpler version can be used:     
+
+
+         .global main  
+main:
+         ...          @ code that does not modify lr
+   
+         mov pc, lr   @ return to start-up code  
+    
+
+See "Writing Interpreters and Compilers for the Raspberry Pi 
+Using Python Second Edition" for an explanation of start-up code. 
+
+
+C LIBRARY FUNCTIONS
+-------------------
+
+The following C library functions are supported:
+
+     printf, fprintf, scanf, fscanf, fopen, fclose, fgets, fputs, 
+     fread, fwrite, fgetc, fputc, getchar, putchar, puts, mkdir
+
+     strcpy, strlen, strcat, strncmp, strchar, strstr, strdup
+
+     isdigit, isxdigit, isspace, islower, isupper, isalpha, 
+     isascii, isalnum 
+     
+     malloc
+
+These functions are emulated within rpi so there is no need to 
+link with the C standard library. 
+
+
+gcc Functions
+-------------
+
+     __aeabi_idiv      (signed division, quotient returned in r0)
+     __aeabi_uidiv     (unsigned division, quotient returned in r0)
+     __aeabi_idivmod   (signed mod, remainder returned in r1)
+     __aeabi_uidivmod  (unsigned mod, remainder returned in r1).
+
+For example, to compute the remainder when the signed integer 5 
+is divided by the signed integer 2, load r0 and r1 with 5 and 2, 
+respectively. Then execute 
+
+     bl __aeabi_idivmod
+
+The remainder is returned in r1. Division and mod can also be 
+performed by the sdiv, udiv, smod, and umod instructions. The 
+latter two are pseudo instructions. 
+
+
+RPI PSEUDO INSTRUCTIONS
+-----------------------
+
+The following rpi pseudo instructions can be used in an assembly 
+language program:
+
+     m    displays memory, and execution continues (takes the 
+          same arguments as the m debugger command, but a space 
+          must follow m) 
+
+     smod like sdiv, but computes the remainder, not the quotient 
+
+     umod like udiv, but computes the remainder, not the quotient 
+
+     p    pauses execution. Allows user to enter debugger 
+          commands. 
+
+     q    terminates execution
+
+     r    displays the registers and the n, z, c, v flags, and 
+          execution continues (takes the same arguments as the r 
+          debugger command, but a space must follow r) 
+
+     s    displays the stack, and execution continues
+
+     t    turns trace on
+
+     t-   turns trace off
+
+     x    turns hex display on
+
+     x-   turns hex display off
+
+
+If you want to see memory and registers at some point in your 
+program, include the m, r, p sequence of pseudo instructions 
+at that point.  For example, to see the value of x and the 
+contents of r1, include
+
+     m x
+     r 1
+     p
+
+Then each time the flow of control reaches these pseudo 
+instructions, they will display the value of x, the contents of 
+register 1, and then pause, giving you the opportunity to examine 
+the display, and enter debugger commands. If you then enter g or 
+hit the Enter key, execution will continue. 
+
+
+PREDEFINED REGISTER NAMES
+-------------------------
+ 
+     fp    register 11
+     ip    register 12
+     sp    register 13
+     lr    register 14
+     pc    register 15
+     cpsr  current program status register
+
+
+DIRECTIVES SUPPORTED
+--------------------
+
+     .global
+     .text
+     .data
+     .bss (treated like .data)
+     .comm (treated like .space)
+     .equ
+     .byte
+     .hword
+     .word
+     .asciz
+     .ascii
+     .string (same as .asciz)
+     .space
+     .align (ignored but all instructions start on word boundary 
+             so .align is not needed)
+
+All other directives are ignored.
+
+
+RASPBIAN SYSCALLS SUPPORTED
+---------------------------
+
+     Syscall 1 (exit): r7 = 1 
+
+     Syscall 3 (keyboard input): r7 = 3, r0 = 0, r1 = address of buffer, 
+                r2 = number of characters
+
+     Syscall 4 (display to monitor): r7 = 4, r0 = 1, r1 = address of 
+                string, r2 = length of string
+      
+     Syscall 39 (make directory): r7 = 39, r0 = directory name, 
+                 r1 = mode
+
+
+NOT SUPPORTED
+-------------
+
+The thumb mode, floating point, and linking are not supported by rpi.
+
+
+ALTERNATE ASSEMBLY LANGUAGE FORMAT
+----------------------------------
+
+The rpi program supports two assembly language formats: the 
+gcc/Raspberry Pi format and an alternate format: 
+ 
+
+     gcc/Raspberry Pi format:
+
+          Labels can start in any column but must be followed by 
+          a colon. 
+
+          Directives, instruction mnemonics, and pseudo 
+          instruction mnemonics can start in any column. 
+
+     Alternate format:
+
+          Labels must start in the first column and should not be 
+          followed by a colon. 
+
+          Directives, instruction mnemonics, and pseudo 
+          instruction mnemonics must not start in the first column. 
+
+The default format is the gcc/Raspbian format. To run a program 
+with the alternate format, either specify -a (for alternate 
+format) on the command line when invoking rpi, or place a comment 
+that contains the word "altformat" in the assembly language 
+program before any lines with labels: 
+
+     ; altformat
+or
+     @ altformat
+
+
+ASSEMBLING A PROGRAM WITH RPI PSEUDO INSTRUCTIONS
+-------------------------------------------------
+
+You may want to run an assembly language program on a system with 
+an ARM processor (for example, the Raspberry Pi) rather than use 
+rpi to run it. To do that, you have to first assemble and link 
+the program. However, if you assemble a program that contains rpi 
+pseudo instructions, the assembly will fail (rpi pseudo 
+instructions are supported only by the rpi program). To avoid 
+this problem, prefix the rpi pseudo instructions with "@!" (if 
+the assembler treats "@" as the start of a comment) or ";!" (if 
+the assembler treats ';'as the start of a comment). Then the 
+assembler will treat the pseudo instructions as comments, and 
+therefore ignore them. But if the same program is run with rpi, 
+the pseudo instructions will still be executed. For example, the 
+"as" assembler on a Raspbery Pi running Raspbian treats the 
+following line as a comment and therefore ignores it: 
+
+     @! m 200
+
+But the rpi program executes it.
+
+
+GCC C COMPILER FOR WINDOWS
+--------------------------
+
+To get gcc for Windows, install Codeblocks (free download from 
+codeblocks.org). Select the setup installation file that includes 
+"mingw" in its name. Currently, it is 
+
+    codeblocks-20.03mingw-32bit-setup.exe
+
+To be able to invoke gcc from the command line, you have to add 
+to the path environment variable the complete path name of the 
+folder that contains the gcc program. To do this, after 
+installing Codeblocks, 
+
+Using the file explorer program, find the folder that contains the
+gcc program. It's probably this:
+
+   C:\Program Files (x86)\CodeBlocks\MinGW\bin
+
+Then in the window near the top that shows the current path name,
+right click and select "copy address". 
+
+Then left click on
+
+Control Panel
+System & Security
+System
+Advanced System Settings
+Environment Variables
+Path
+Edit...
+New
+
+Then in the new box, past (i.e., right click) the complete path 
+name of the folder that contains the gcc program. 
+
+To install the Embarcadero C/C++ compiler, unzip the distribution 
+file into a folder of your choice. Then using the procedure 
+described above for gcc, add the complete path name of the folder 
+that contains bcc32c.exe to the path environment variable. 

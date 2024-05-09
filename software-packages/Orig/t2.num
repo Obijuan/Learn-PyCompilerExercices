@@ -1,0 +1,289 @@
+  1 # t2.py tokenizer                    
+  2 import sys, time   # sys needed to access cmd line args and sys.exit()
+  3 
+  4 class Token:
+  5    def __init__(self, line, column, category, lexeme):
+  6       self.line = line         # source program line number of the token
+  7       self.column = column     # source program column in which token starts
+  8       self.category = category # category of the token
+  9       self.lexeme = lexeme     # token in string form
+ 10 
+ 11 # global variables 
+ 12 trace = True       # controls token trace
+ 13 grade = False      # controls grade display
+ 14 source = ''        # receives entire source program
+ 15 sourceindex = 0    # index into the source code in source
+ 16 line = 0           # current line number 
+ 17 column = 0         # current column number
+ 18 tokenlist = []     # list of tokens created by tokenizer
+ 19 token = None       # current token
+ 20 prevchar = '\n'    # '\n' in prevchar signals start of new line
+ 21 blankline = True   # reset to False if line not blank
+ 22 instring = False   # True when processing a string
+ 23 parenlevel = 0     # nesting level of parentheses
+ 24 
+ 25 # constants that represent token categories
+ 26 EOF           = 0      # end of file
+ 27 PRINT         = 1      # 'print' keyword
+ 28 UNSIGNEDINT   = 2      # unsigned integer
+ 29 NAME          = 3      # identifier that is not a keyword
+ 30 ASSIGNOP      = 4      # '=' assignment operator
+ 31 LEFTPAREN     = 5      # '('
+ 32 RIGHTPAREN    = 6      # ')'
+ 33 PLUS          = 7      # '+'
+ 34 MINUS         = 8      # '-'
+ 35 TIMES         = 9      # '*'
+ 36 NEWLINE       = 10     # end of line
+ 37 ERROR         = 11     # if not any of the above, then error
+ 38 
+ 39 # new keywords
+ 40 NONE          = 12     # 'None' keyword
+ 41 TRUE          = 13     # 'True' keyword
+ 42 FALSE         = 14     # 'False' keyword
+ 43 PASS          = 15     # 'pass' keyword
+ 44 IF            = 16     # 'if' keyword
+ 45 ELSE          = 17     # 'else' keyword
+ 46 WHILE         = 18     # 'while' keyword
+ 47 
+ 48 # new types
+ 49 UNSIGNEDFLOAT = 19     # number with a decimal point
+ 50 STRING        = 20     # string delimited by single quotes
+ 51 
+ 52 # relational operators category numbers
+ 53 EQUAL         = 21     # '=='
+ 54 NOTEQUAL      = 22     # '!='
+ 55 LESSTHAN      = 23     # '<'
+ 56 LESSEQUAL     = 24     # '<='
+ 57 GREATERTHAN   = 25     # '>'
+ 58 GREATEREQUAL  = 26     # '>='
+ 59 
+ 60 # new arithmetic operators
+ 61 DIV           = 27     # '/'  floating point divide
+ 62 
+ 63 # new punctuation      
+ 64 COMMA         = 28     # ','
+ 65 COLON         = 29     # ':'
+ 66 
+ 67 # Python indentation
+ 68 
+ 69 INDENT        = 30     # indentation
+ 70 DEDENT        = 31     # outdentation 
+ 71 
+ 72 # displayable names for each token category
+ 73 catnames = ['EOF', 'print', 'UNSIGNEDINT', 'NAME', 'ASSIGNOP',
+ 74             'LEFTPAREN', 'RIGHTPAREN', 'PLUS', 'MINUS',
+ 75             'TIMES', 'NEWLINE','ERROR', 'NONE', 'TRUE', 'FALSE',
+ 76             'PASS', 'IF', 'ELSE', 'WHILE', 'UNSIGNEDFLOAT',
+ 77             'STRING', 'EQUAL', 'NOTEQUAL', 'LESSTHAN', 'LESSEQUAL',
+ 78             'GREATERTHAN', 'GREATEREQUAL', 'DIV',
+ 79             'COMMA', 'COLON', 'INDENT','DEDENT']
+ 80 
+ 81 keywords = {'print':PRINT, 'None':NONE,'True':TRUE, 
+ 82             'False':FALSE, 'pass':PASS, 'if':IF, 'else':ELSE, 
+ 83             'while':WHILE}
+ 84 
+ 85 smalltokens = {'=':ASSIGNOP, '==':EQUAL, '<':LESSTHAN, 
+ 86                '<=':LESSEQUAL, '>':GREATERTHAN, '>=':GREATEREQUAL,
+ 87                '!':ERROR, '!=':NOTEQUAL, '(':LEFTPAREN, 
+ 88                ')':RIGHTPAREN, '+':PLUS, '-':MINUS, '*':TIMES,
+ 89                '\n':NEWLINE, '':EOF, ',':COMMA , ':':COLON, '/':DIV}
+ 90 
+ 91 #################
+ 92 # main function #
+ 93 #################
+ 94 # main() reads source file and calls tokenizer
+ 95 def main():
+ 96    global source
+ 97 
+ 98    if len(sys.argv) == 2:      # check if two cmd line args
+ 99       try:
+100          infile = open(sys.argv[1], 'r')
+101          source = infile.read()   # read source code
+102       except IOError:
+103          print('Cannot read input file ' + sys.argv[1])
+104          sys.exit(1)
+105    else:
+106       print('Wrong number of command line arguments')
+107       print('Format: python t2.py <infile>')
+108       sys.exit(1)
+109 
+110    if source[-1] != '\n':   # add newline to end if missing
+111       source = source + '\n'
+112 
+113    if grade:
+114       print(time.strftime('%c') + '%34s' % 'YOUR NAME HERE')
+115       print('Tokenizer = ' + sys.argv[0])
+116       print('Input file  = ' + sys.argv[1])
+117 
+118    if trace:
+119       print('------------------------------------------- Token trace')
+120       print('Line  Col Category    Lexeme\n')
+121 
+122    try:
+123       tokenizer()    # tokenize source code in source
+124 
+125    # on an error, display an error message
+126    # token is the token object on which the error was detected
+127    except RuntimeError as emsg: 
+128      # output slash n in place of newline
+129      lexeme = token.lexeme.replace('\n', '\\n')
+130      print('\nError on '+ "'" + lexeme + "'" + ' line ' +
+131         str(token.line) + ' column ' + str(token.column))
+132      print(emsg.args[0]) # message from RuntimeError object
+133 
+134 ####################
+135 # tokenizer        #
+136 ####################
+137 def tokenizer():
+138    global token, instring
+139    curchar = ' '                       # prime curchar with space
+140    indentstack = [1]
+141 
+142    while True:
+143       # skip whitespace but not newlines
+144       while curchar != '\n' and curchar.isspace():
+145          curchar = getchar() # get next char from source program
+146 
+147       # construct and initialize token
+148       token = Token(line, column, None, '')  
+149 
+150       if curchar.isdigit() or curchar == '.': 
+151          token.category = UNSIGNEDINT
+152          if curchar == '.':
+153             token.category = UNSIGNEDFLOAT
+154          while True:
+155             token.lexeme += curchar
+156             curchar = getchar()
+157             if token.category == UNSIGNEDINT and curchar == '.':
+158                token.category = UNSIGNEDFLOAT
+159             elif not curchar.isdigit():
+160                break
+161 
+162       elif curchar == "'":
+163          instring = True
+164          while True:
+165             curchar = getchar()
+166             if curchar == '' or curchar == '\n':
+167                raise RuntimeError('Unterminated string')
+168             if curchar == "'":
+169                curchar = getchar()
+170                token.category = STRING
+171                instring = False
+172                break
+173             if curchar == '\\':
+174                curchar = getchar()
+175                if curchar == 'n':
+176                   token.lexeme += '\n'
+177                elif curchar == 't':
+178                   token.lexeme += '\t'
+179                elif curchar == '\n':
+180                   pass
+181                else:
+182                   token.lexeme += curchar
+183             else:
+184                token.lexeme += curchar
+185 
+186       elif curchar.isalpha() or curchar == '_':
+187          while True:
+188             token.lexeme += curchar
+189             curchar = getchar()
+190             if not curchar.isalnum() and curchar != '_':
+191                break
+192          # determine if lexeme is a keyword or name of variable
+193          if token.lexeme in keywords:
+194             token.category = keywords[token.lexeme]
+195          else:
+196             token.category = NAME
+197 
+198       elif curchar in smalltokens:
+199          save = curchar
+200          curchar = getchar()
+201          twochar = save + curchar
+202          if twochar in smalltokens:
+203             token.category = smalltokens[twochar]
+204             token.lexeme = twochar
+205             curchar = getchar()
+206          else: 
+207             token.category = smalltokens[save]
+208             token.lexeme = save
+209       else:
+210          token.category = ERROR    # invalid token 
+211          token.lexeme = curchar    # save lexeme
+212          raise RuntimeError('Invalid token')
+213       
+214       # check for change in indentation when starting a new line
+215       if len(tokenlist) == 0 or tokenlist[-1].category == NEWLINE:
+216          if indentstack[-1] < token.column:         # indentation
+217             indentstack.append(token.column)
+218             indenttoken = Token(token.line, token.column, INDENT, '{')
+219             tokenlist.append(indenttoken)
+220             if trace:
+221                print("%3s %4s  %-14s %s" % (str(indenttoken.line), 
+222                   str(indenttoken.column), catnames[indenttoken.category], 
+223                   indenttoken.lexeme))
+224          elif indentstack[-1] > token.column:       # dedentation
+225             while True:
+226                dedenttoken = Token(token.line, token.column, DEDENT, '}') 
+227                tokenlist.append(dedenttoken)
+228                indentstack.pop()
+229                if trace:
+230                   print("%3s %4s  %-14s %s" % (str(dedenttoken.line), 
+231                      str(dedenttoken.column), catnames[dedenttoken.category], 
+232                      dedenttoken.lexeme))
+233                if indentstack[-1] == token.column:
+234                   break
+235                elif indentstack[-1] < token.column:
+236                   raise RuntimeError('Indentation error')
+237       
+238       tokenlist.append(token)      # append token to tokens list
+239       if trace:                    # display token if trace is True
+240          print("%3s %4s  %-14s %s" % (str(token.line), 
+241             str(token.column), catnames[token.category], token.lexeme))
+242 
+243       if token.category == EOF:    # finished tokenizing?
+244          break
+245 
+246 # getchar() gets next char from source and adjusts line and column
+247 def getchar():
+248    global sourceindex, column, line, prevchar, blankline
+249 
+250    # check if starting a new line
+251    if prevchar == '\n':    # '\n' signals start of a new line
+252       line += 1            # increment line number                             
+253       column = 0           # reset column number
+254       blankline = True     # initialize blankline
+255 
+256    if sourceindex >= len(source): # at end of source code?
+257       column = 1                  # set EOF column to 1
+258       prevchar = ''               # save current char for next call
+259       return ''                   # str char signals end of source
+260 
+261    c = source[sourceindex] # get next char in the source program
+262    sourceindex += 1        # increment sourceindex to next character
+263    column += 1             # increment column number
+264 
+265    if c == '#' and not instring:      # skip over comment
+266       while True:
+267          c = source[sourceindex]
+268          sourceindex += 1
+269          if c == '\n':
+270             break
+271 
+272    if not c.isspace():     # if c not whitespace then line not blank
+273       blankline = False    # indicate line not blank
+274    prevchar = c            # save current character
+275 
+276    # if at end of blank line, return space in place of '\n'
+277    if c == '\n' and blankline:
+278       return ' '
+279    else:
+280       return c             # return character to tokenizer()
+281 
+282 ####################
+283 # start of program #
+284 ####################
+285 main()
+286 if grade:
+287    # display language processor's source code
+288    print('------------------------------------------- ' + sys.argv[0])
+289    print(open(sys.argv[0]).read())

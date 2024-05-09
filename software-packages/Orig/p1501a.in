@@ -1,0 +1,32 @@
+print(-5 + 2*3)
+
+a = 2   
+b = a + 8
+print(a*b + a*3*(-1 + -1 + -1))
+
+# start of code that tests new features
+if a == 2:            # test if
+   if a == 2:
+       pass
+      print(3)
+if a != 2:            # test if-else
+   print('err#or')    # this print should be skipped
+else:
+   print(4,)          # this print should be executed
+while a == 3:
+   print('error')     # this print should be skipped
+a = ----+--+--5       # test multiple unary operators
+while a < 10:         # test while
+   print(a)
+   a = +a + .5 + 0.5
+if True:              # True is a boolean constant
+   pass               # pass does nothing
+else:
+   print('er\'\\\'ror')
+print('10\n11')
+print('1' + '2')      # string concatenation
+print(-a + 23)        # unary minus operation
+print(14, 15, 16)     # one space between numbers
+if (None != False):
+   print(51/(5 - 2))  # test subtraction
+

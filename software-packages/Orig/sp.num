@@ -1,0 +1,61 @@
+  1 # sp.py parser
+  2 # Grammar:
+  3 #    <S> -> <A><C>
+  4 #    <A> -> 'a''b'
+  5 #    <C> -> 'c'<C>
+  6 #    <C> -> 'd'
+  7 import sys   # needed to access command line arg
+  8 
+  9 #global variables
+ 10 tokenindex = -1
+ 11 token = ''
+ 12 
+ 13 def main():
+ 14    try:
+ 15       parser()         # call the parser
+ 16    except RuntimeError as emsg:
+ 17       print(emsg)
+ 18 
+ 19 def advance():
+ 20    global tokenindex, token
+ 21    tokenindex += 1     # move tokenindex to next token
+ 22    # check for null string or end of string
+ 23    if len(sys.argv) < 2 or tokenindex >= len(sys.argv[1]):
+ 24       token = ''      # signal the end by returning null string
+ 25    else:
+ 26       token = sys.argv[1][tokenindex]
+ 27 
+ 28 def consume(expected):
+ 29    if expected == token:
+ 30       advance()
+ 31    else:
+ 32       raise RuntimeError('Expecting ' + expected)
+ 33 
+ 34 def parser():
+ 35    advance()   # prime token with first character
+ 36    S()         # call function for start symbol
+ 37    # test if end of input string
+ 38    if token != '': 
+ 39       print('Garbage following <S>-string')
+ 40    
+ 41 def S():
+ 42    A()
+ 43    C()
+ 44 
+ 45 def A():
+ 46    consume('a')
+ 47    consume('b')
+ 48 
+ 49 def C():
+ 50    if token == 'c':
+ 51       # perform actions corresponding to production 3
+ 52       advance()
+ 53       C()
+ 54    elif token == 'd':
+ 55       # perform action corresponding to production 4
+ 56       advance()
+ 57    else:
+ 58       raise RuntimeError('Expecting c or d')
+ 59 
+ 60 main()
+

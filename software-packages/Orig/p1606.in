@@ -1,0 +1,4 @@
+if 3:
+   print('3 is true')
+if 3 == True:
+   print('3 == True is true')

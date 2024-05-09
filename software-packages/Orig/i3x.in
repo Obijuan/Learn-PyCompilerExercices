@@ -1,0 +1,64 @@
+print(-20*2 + 39)
+a = -2
+bb_1 = -(a) + 13
+print(a*bb_1 + -1*(-1 + -1 + -1)*10 - 2)
+
+# start of code that tests level 2 features
+print()
+if a <= 2:            # test if
+   if a < 0:
+      if a > -5:
+         pass
+         print(a - 1)
+if a != -2:           # test if-else
+   print('error')         
+else:
+   print(-4,)         # this print should be skipped
+while a >= 3:
+   print('error')     # this print should be skipped
+a = -----+--+--5      # test multiple unary operators
+while a > -10:        # test while
+   print(a)
+   a = +a - .75 - 0.25
+if True:              # True is a boolean constant
+   pass               # pass does nothing
+print('-10\n-11')       # escape sequence
+print('-' + '1' + '2')  # string concatenation
+print(-a - 23)        # unary minus operation
+if a <= 10:
+   print('#-14\'\\')  # quote, pound, backslash
+print(-15, -16)       # one space between numbers
+if (None != False):
+   print((70 - 2)/(5 - 9))  # test subtraction
+
+# start of code that tests level 3 features
+print()
+def main():
+   global a
+   x = -10
+   a = -11
+   f()
+   print(a - 8)
+   print(x - 10)
+   a = a + 1 
+   print(h(a))
+   print(h(-11))
+def f():
+   a = -1
+   x = 77
+   g()
+def g():
+  x = -18
+  print(x)
+
+def h(a):
+  x = a - 11
+  return x
+
+main()
+x = input('enter -23\n')
+x = int(x)
+if x != -23:
+   print('error')
+else:
+  print('-\'twenty#four\'')
