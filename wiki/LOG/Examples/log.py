@@ -89,4 +89,4 @@ class Input:
         if self.token == expected:
             self.advance()
         else:
-            raise RuntimeError(f'  ❌ERROR: Token esperado: {expected}')
+            raise RuntimeError(f'⭕ERROR: Token esperado: {expected}')
