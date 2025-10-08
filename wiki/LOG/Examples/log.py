@@ -16,7 +16,7 @@ class Input:
     # -- Crear un buffer de entrada, inicializado con
     # -- la cadena indicada
     # -------------------------------------------------
-    def __init__(self, buffer=''):
+    def __init__(self, buffer='', debug=False):
 
         # -- Propiedad: Buffer de entrada
         self._buffer = buffer
@@ -26,6 +26,9 @@ class Input:
 
         # -- Propiedad: Simbolo actual
         self.token = ''
+
+        # -- Propiedad debug
+        self._debug = debug
 
     # ─────────────────────────────────────────────────
     # ── AVANZAR
@@ -41,10 +44,15 @@ class Input:
         # -- Leer simbolo actual
         try:
             self.token = self._buffer[self.index]
+
         except IndexError:
             # -- Hemos llegado al final
-            # -- Deolver la cadena vacia
+            # -- Devolver la cadena vacia
             self.token = ''
+
+        # -- En modo debug se imprime el token actual
+        if self._debug:
+            print(f"Token: {self.str_token()}")
 
     # ─────────────────────────────────────────────────
     # ── DEVOLVER la cadena asociada al token actual
