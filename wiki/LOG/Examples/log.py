@@ -45,3 +45,13 @@ class Input:
             # -- Hemos llegado al final
             # -- Deolver la cadena vacia
             self.token = ''
+
+    # ─────────────────────────────────────────────────
+    # ── DEVOLVER la cadena asociada al token actual
+    # Si el token actual es la cadena nula, se imprime
+    # el mensaje <empty>
+    # De lo contrario se devuleve el propio simbolo
+    # ─────────────────────────────────────────────────
+    def str_token(self):
+        token = "<empty>" if self.token == '' else self.token
+        return token
