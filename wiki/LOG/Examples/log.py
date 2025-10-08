@@ -90,3 +90,15 @@ class Input:
             self.advance()
         else:
             raise RuntimeError(f'⭕ERROR: Token esperado: {expected}')
+
+    # ────────────────────────────────────────────────────────
+    # -- Consumir una cadena de caracteres
+    # -- Se llama a CONSUMIR tantas veces como caracteres hay
+    # -- en la cadena
+    # ────────────────────────────────────────────────────────
+    def consume_str(self, expected_str: str):
+
+        # -- Recorrer la cadena completa
+        # -- consumiendo los caracteres uno a uno
+        for expected in expected_str:
+            self.consume(expected)
