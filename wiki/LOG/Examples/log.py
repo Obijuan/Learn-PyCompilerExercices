@@ -63,3 +63,19 @@ class Input:
     def str_token(self):
         token = "<empty>" if self.token == '' else self.token
         return token
+
+    # ────────────────────────────────────────────────────────
+    # -- CONSUMIR un simbolo de la entrada
+    # -- Se espera que en la entrada haya un simbolo determinado
+    # -- Si lo hay se consume: es decir, se da por valido y se
+    # -- lee el siguiente
+    # -- Si NO lo hay, se genera una EXCEPCION de error
+    # --
+    # -- ENTRADA:
+    # --   expected: Simbolo a consumir
+    # ────────────────────────────────────────────────────────
+    def consume(self, expected: str):
+        if self.token == expected:
+            self.advance()
+        else:
+            raise RuntimeError(f'  ❌ERROR: Token esperado: {expected}')
