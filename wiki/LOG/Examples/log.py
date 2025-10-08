@@ -18,6 +18,17 @@ class Input:
     # -------------------------------------------------
     def __init__(self, buffer='', debug=False):
 
+        # -- Inicializar las propiedades
+        self.reset(buffer, debug)
+
+    # ------------------------------------------------------------
+    # -- Inicializar las propiedades a sus valores iniciales
+    # -- o los datos por el usuario
+    # ------------------------------------------------------------
+    def reset(self, buffer='', debug=False):
+        # -- Inicializar todas las propiedades a sus valores iniciales
+        # -- o dados por el usuario
+
         # -- Propiedad: Buffer de entrada
         self._buffer = buffer
 
