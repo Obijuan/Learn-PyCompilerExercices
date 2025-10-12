@@ -21,20 +21,20 @@ print()
 print("CONTENIDO FICHERO:")
 print(data)
 
-#-- Obtener la primera linea (sin el \n)
+# -- Obtener la primera linea (sin el \n)
 data = data.splitlines()
 
-#-- Separar la linea en palabras
+# -- Separar la linea en palabras
 items = data[0].split(' ')
 
-#-- Lista de palabras
+# -- Lista de palabras
 words = []
 
-#-- Lista de numeros
+# -- Lista de numeros
 nums = []
 
-#-- Recorrer la lista original clasificando los items
-#-- en palabras o numeros
+# -- Recorrer la lista original clasificando los items
+# -- en palabras o numeros
 for item in items:
     if item.isalpha():
         words.append(item)
@@ -47,11 +47,10 @@ for word in words:
     print(f'{word}', end=' ')
 print()
 
-#-- Imprimir los numeros
+# -- Imprimir los numeros
 print()
 print("NUMEROS:")
 for num in nums:
     print(f'{num}', end=' ')
 print()
 print()
-
