@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # sp.py parser
 # Grammar:
 #    <S> -> <A><C>
