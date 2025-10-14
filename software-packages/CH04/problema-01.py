@@ -102,14 +102,14 @@ def parse(input_str: str):
 # ──────────────
 # ── MAIN
 # ──────────────
-parse("")
 parse("c")
 parse("acb")
 parse("aacbb")
-parse("aaacbbb")
-parse("a")
-parse("bca")
+parse("")
+parse("ca")
+parse("ab")
+parse("acbb")
 parse("aacb")
-parse("aacbbb")
+parse("bca")
 
 print()
